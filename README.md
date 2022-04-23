@@ -1,10 +1,7 @@
-# dev_linux
-linux 测试命令
+# Linux
 
-## https-ssl
+## 目录
 
-https 的 ca 证书自动生成的 shell 脚本
-
-## vue-mangager-shell
-
-管理 vue 项目的 shell 脚本
+- [生成https的CA证书shell脚本](210801_https-ssl)
+- [自编的vue项目部署管理shell](210801_vue-manager-shell)
+- [k8s入门学习](220423_kubernetes)
