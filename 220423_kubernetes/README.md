@@ -2,7 +2,7 @@
 
 Kubernetes 入门学习资料，该文档笔记为 K8s 入门性质的学习资料，相信通过该文档的学习，你会快速掌握Kubernetes的基本用法。
 
-## 文档:wq:
+## 文档:
 
 - 博客：https://blog.mailjob.net
 - 文档下载：https://github.com/mailjobblog/dev_linux/tree/master/220423_kubernetes
