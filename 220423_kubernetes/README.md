@@ -17,10 +17,7 @@ Kubernetes 入门学习资料，该文档笔记为 K8s 入门性质的学习资�
 - Helm管理k8s
 - 常见问题
 
-## 文档下载
-
-https://github.com/mailjobblog/dev_linux/tree/master/220423_kubernetes
-
 ## 关于
 
-MIT
+- 博客：https://blog.mailjob.net
+- 文档下载：https://github.com/mailjobblog/dev_linux/tree/master/220423_kubernetes
