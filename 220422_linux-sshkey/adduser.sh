@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # How to use addUser ?
-# sh adduser.sh zhangsan "xxxxxIeR6zI/PlbOSjEI9JzExxxx"
+# sh adduser.sh <your username> "<your ssh-key>"
 
 # How to generate SSH key ?
 # ssh-keygen -t rsa -C "your_eamil@163.com"
@@ -14,14 +14,23 @@
 
 
 # Parameter verification
+echo ""
 if [ ! $1 ]; then
-    echo "Error: The parameter username is required"
+    echo "Error: The parameter [username] is required"
     exit 1
 fi
+
 if [ ! $2 ]; then
-    echo "Error: The parameter ssh-key is required"
+    echo "Error: The parameter [ssh-key] is required"
     exit 1
 fi
+
+if id -u $1 >/dev/null 2>&1 ; then
+    echo "Warning: User [$1] exists"
+    echo "Please delete the user before creating the user"
+    exit 1
+fi
+
 
 # print user info
 echo 'username:' $1
