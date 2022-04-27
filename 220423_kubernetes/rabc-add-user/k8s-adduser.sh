@@ -9,11 +9,21 @@ NAMESPACE=$2
 
 
 # 参数定义
-# $KUBE_APISERVER
-Cluster_Name=`kubectl config get-clusters | awk '{print $1}' | sed -n 2p`
-Api_Server=`kubectl cluster-info |  awk '{print $NF}' | sed -n 1p`
+# echo $KUBE_APISERVER
 User_Openssl_File=/etc/kubernetes/pki/${USERNAME}
-Add_Ssh_Key_User_Doc=https://github.com/mailjobblog/dev_linux/tree/master/220422_linux-sshkey
+Add_User_Doc=https://github.com/mailjobblog/dev_linux/tree/master/220422_linux-sshkey
+
+Cluster_Name=`kubectl config get-clusters | awk '{print $1}' | awk 'NR==2'`
+if [ $? -ne 0 ]; then
+    echo "Error: get Cluster Name failed"
+	  exit 1
+fi
+Api_Server=`kubectl cluster-info | awk '{print $NF}' | awk 'NR==1' |  sed -r "s:\x1B\[[0-9;]*[mK]::g"`
+if [ $? -ne 0 ]; then
+    echo "Error: get Api Server failed"
+	  exit 1
+fi
+
 
 # Parameter verification
 echo ""
@@ -31,7 +41,7 @@ egrep "^$USERNAME" /etc/passwd >& /dev/null
 if [ $? -ne 0 ]; then
     echo "Warning: User ${USERNAME} not exists"
     echo ""
-    echo "Please add users before performing this operation [Read Doc: ${Add_Ssh_Key_User_Doc}]"
+    echo "Please add users before performing this operation [Read Doc: ${Add_User_Doc}]"
     echo ""
 	  exit 1
 fi
@@ -109,8 +119,11 @@ fi
 echo ">>>>> set-context create success"
 
 # 创建角色并绑定用户
+# 角色命名与角色绑定器命名说明：
+# 如果 user=devuser
+# 则 role=role-devuser、 rolebinding=rb-role-devuser
 Role_Name=role-${USERNAME}
-Role_Binding_Name=rolebuding-${Role_Name}
+Role_Binding_Name=rb-${Role_Name}
 
 # 创建角色
 kubectl create role ${Role_Name} \
