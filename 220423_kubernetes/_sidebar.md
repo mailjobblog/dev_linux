@@ -9,9 +9,7 @@
   * [安装要求](docs/2.k8s搭建/3.安装要求.md)
   * [最终目标](docs/2.k8s搭建/4.最终目标.md)
   * [准备环境](docs/2.k8s搭建/5.准备环境.md)
-  * [系统初始化](docs/2.k8s搭建/6.系统初始化.md)
-  * [部署KubernetesMaster](docs/2.k8s搭建/7.部署KubernetesMaster.md)
-  * [测试kubernetes集群](docs/2.k8s搭建/8.测试kubernetes集群.md)
+  * [集群搭建](docs/2.k8s搭建/6.集群搭建.md)
 * 资源管理
   * [资源管理介绍](docs/3.资源管理/1.资源管理介绍.md)
   * [YAML语言介绍](docs/3.资源管理/2.YAML语言介绍.md)
