@@ -34,9 +34,12 @@ fi
 
 # 添加用户 user
 useradd -m $1
-# 添加用户到sheel组，使其具备sudo权限
+# 添加用户到wheel组，使其具备sudo权限。此外还添加了一个同名的用户组
 # 一般情况情况下将用户添加到 wheel 组，那么该用户就具备 sudo 权限，需要您重新为该用户单独添加 sudo 权限
 # 前提是 /etc/sudoers 文件中，wheel 组的 sudo 已经被开放 `%wheel ALL=(ALL) ALL`
+# -G: 指定用户从属的一个或多个从用户组
+# -aG: 仅把指定的用户加到列举的从用户组中即可
+# 你可以使用命令 `getent group wheel` 查看 wheel 组的信息
 usermod -G wheel $1
 # 删除用户密码
 passwd -d $1
