@@ -110,6 +110,7 @@ Set_Context_Name=${USERNAME}@${Cluster_Name}
 kubectl config set-context ${Set_Context_Name} \
 --cluster=${Cluster_Name} \
 --user=${USERNAME} \
+--namespace=${NAMESPACE} \
 --kubeconfig=${User_Openssl_File}.kubeconfig
 
 if [ $? -ne 0 ]; then
