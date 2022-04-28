@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # How to use addUser ?
-# sh adduser.sh <your username> "<your ssh-key>"
+# sh adduser.sh <username> "<your pub key>"
 
 # How to generate SSH key ?
 # ssh-keygen -t rsa -C "your_eamil@163.com"
