@@ -27,6 +27,13 @@ sh k8s-deluser.sh <your username> <k8s namespace>
 
 ### 说明
 
-如果要删除 role、rolebinding 是使用此脚本删除被授权用户。
+如果要删除 role、rolebinding 是使用此脚本删除被授权用户。  
+
+**执行工作如下：**
+
+- 删除用户角色role
+- 删除用户和角色的绑定关系rolebinding
+- 删除用户生成的openssl证书文件
+- 删除用户目录下的k8s配置目录 `.kube`
 
 
