@@ -70,7 +70,7 @@ fi
 # 签名文件和证书生成
 openssl genrsa -out ${user_openssl_path_name}.key 2048
 openssl req -new -key ${user_openssl_path_name}.key \
--subj "/CN=${USERNAME}/O=devGroup" \
+-subj "/CN=${USERNAME}/O=group" \
 -out ${user_openssl_path_name}.csr
 openssl x509 -req \
 -CA /etc/kubernetes/pki/ca.crt \
