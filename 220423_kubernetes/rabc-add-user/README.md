@@ -17,7 +17,7 @@ Role只能对命名空间内的资源进行授权，需要指定nameapce。
 一个角色就是一组权限的集合，这里的权限都是许可形式的（白名单）。  
 如果你想跨namespace授权，则此shell脚本无法满足您的需求，请阅读文档使用 ClusterRole、ClusterRoleBinding 的方法授权认证用户。  
 
-## k8s-adduser.sh
+## k8s-deluser.sh
 
 ```bash
 sh k8s-deluser.sh <your username> <k8s namespace>
