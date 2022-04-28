@@ -69,3 +69,21 @@ systemctl restart sshd.service
 ```
 
 ### 配置sudo权限
+
+```bash
+vi /etc/sudoers
+```
+
+```bash
+## Allows people in group wheel to run all commands
+
+# 如果去掉该行注释，则 wheel 组都具有 sudo 权限
+%wheel  ALL=(ALL)       ALL
+
+# 使 username 具备 sudo 权限
+username ALL=(ALL) ALL
+```
+
+### 其他配置建议
+
+- 关闭selinux

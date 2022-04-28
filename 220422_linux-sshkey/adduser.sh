@@ -32,13 +32,13 @@ if id -u $1 >/dev/null 2>&1 ; then
 fi
 
 
-# print user info
-echo 'username:' $1
-echo 'ssh-key:' $2
-
-# add user
+# 添加用户 user
 useradd -m $1
+# 添加用户到sheel组，使其具备sudo权限
+# 一般情况情况下将用户添加到 wheel 组，那么该用户就具备 sudo 权限，需要您重新为该用户单独添加 sudo 权限
+# 前提是 /etc/sudoers 文件中，wheel 组的 sudo 已经被开放 `%wheel ALL=(ALL) ALL`
 usermod -G wheel $1
+# 删除用户密码
 passwd -d $1
 
 # ssh-key authorization
@@ -46,3 +46,21 @@ mkdir /home/$1/.ssh
 echo $2 > /home/$1/.ssh/authorized_keys
 chmod 600 /home/$1/.ssh/authorized_keys
 chown $1:$1 /home/$1/.ssh -R
+
+
+
+echo ""
+echo "+-------------------------------------------------------------+"
+echo "|                                                             |"
+echo "| Linux add user succes                                       |"
+echo "|                                                             |"
+echo "+-------------------------------------------------------------+"
+echo ""
+echo "username: $1"
+echo "ssh-key: $2"
+echo ""
+echo "---------------------------------------------------------------"
+echo "Help Document"
+echo ""
+echo ""
+echo "---------------------------------------------------------------"
