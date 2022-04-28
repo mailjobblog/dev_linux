@@ -9,9 +9,19 @@ NAMESPACE=$2
 
 
 # 参数定义
-# echo $KUBE_APISERVER
+
+# 环境变量
+# 用于定义k8s集群master服务器IP地址
+# KUBE_APISERVER
+# export KUBE_APISERVER="https://your_ipaddress:6443"
+
+# k8s用户证书文件存放地址
 User_Openssl_File=/etc/kubernetes/pki/${USERNAME}
+
+# Linux添加用户说明文档
 Add_User_Doc=https://github.com/mailjobblog/dev_linux/tree/master/220422_linux-sshkey
+
+
 
 Cluster_Name=`kubectl config get-clusters | awk '{print $1}' | awk 'NR==2'`
 if [ $? -ne 0 ]; then
