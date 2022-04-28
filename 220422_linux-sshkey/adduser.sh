@@ -48,11 +48,18 @@ chmod 600 /home/$1/.ssh/authorized_keys
 chown $1:$1 /home/$1/.ssh -R
 
 
+# user info
+# user_info=`cat /etc/passwd | grep adduser1 | awk -F: '{print "用户名称: "$1, "用户ID: "$3, "用户所在组ID: "$4, "备注: "$5, "用户家目录: "$6}'`
+user_id=`cat /etc/passwd | grep adduser1 | awk -F: '{print $3}'`
+user_group_id=`cat /etc/passwd | grep adduser1 | awk -F: '{print $4}'`
+user_remarks=`cat /etc/passwd | grep adduser1 | awk -F: '{print $5}'`
+user_home=`cat /etc/passwd | grep adduser1 | awk -F: '{print $6}'`
+user_group_name=`cat /etc/group | grep ${user_group_id} | awk -F: '{print $1}'`
 
 echo ""
 echo "+-------------------------------------------------------------+"
 echo "|                                                             |"
-echo "| Linux add user succes                                       |"
+echo "| Linux authorization user success                            |"
 echo "|                                                             |"
 echo "+-------------------------------------------------------------+"
 echo ""
@@ -60,7 +67,11 @@ echo "username: $1"
 echo "ssh-key: $2"
 echo ""
 echo "---------------------------------------------------------------"
-echo "Help Document"
 echo ""
+echo "用户ID: ${user_id}"
+echo "用户组ID: ${user_group_id}"
+echo "用户组名称: ${user_group_name}"
+echo "用户备注: ${user_remarks}"
+echo "用户家目录: ${user_home}"
 echo ""
 echo "---------------------------------------------------------------"
