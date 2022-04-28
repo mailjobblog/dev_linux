@@ -27,6 +27,6 @@ sh k8s-deluser.sh <your username> <k8s namespace>
 
 ### 说明
 
-如果要删除 role、rolebinding 是使用此脚本删除授权用户。
+如果要删除 role、rolebinding 是使用此脚本删除被授权用户。
 
 
