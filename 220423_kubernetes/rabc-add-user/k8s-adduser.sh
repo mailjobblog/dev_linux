@@ -16,19 +16,19 @@ NAMESPACE=$2
 # export KUBE_APISERVER="https://your_ipaddress:6443"
 
 # k8s用户证书文件存放地址
-User_Openssl_File=/etc/kubernetes/pki/${USERNAME}
+user_openssl_path_name=/etc/kubernetes/pki/${USERNAME}
 
 # Linux添加用户说明文档
-Add_User_Doc=https://github.com/mailjobblog/dev_linux/tree/master/220422_linux-sshkey
+add_user_doc=https://github.com/mailjobblog/dev_linux/tree/master/220422_linux-sshkey
 
 
 
-Cluster_Name=`kubectl config get-clusters | awk '{print $1}' | awk 'NR==2'`
+cluster_name=`kubectl config get-clusters | awk '{print $1}' | awk 'NR==2'`
 if [ $? -ne 0 ]; then
     echo "Error: get Cluster Name failed"
 	  exit 1
 fi
-Api_Server=`kubectl cluster-info | awk '{print $NF}' | awk 'NR==1' |  sed -r "s:\x1B\[[0-9;]*[mK]::g"`
+api_server=`kubectl cluster-info | awk '{print $NF}' | awk 'NR==1' |  sed -r "s:\x1B\[[0-9;]*[mK]::g"`
 if [ $? -ne 0 ]; then
     echo "Error: get Api Server failed"
 	  exit 1
@@ -51,7 +51,7 @@ egrep "^$USERNAME" /etc/passwd >& /dev/null
 if [ $? -ne 0 ]; then
     echo "Warning: User ${USERNAME} not exists"
     echo ""
-    echo "Please add users before performing this operation [Read Doc: ${Add_User_Doc}]"
+    echo "Please add users before performing this operation [Read Doc: ${add_user_doc}]"
     echo ""
 	  exit 1
 fi
@@ -68,14 +68,14 @@ fi
 
 
 # 签名文件和证书生成
-openssl genrsa -out ${User_Openssl_File}.key 2048
-openssl req -new -key ${User_Openssl_File}.key \
+openssl genrsa -out ${user_openssl_path_name}.key 2048
+openssl req -new -key ${user_openssl_path_name}.key \
 -subj "/CN=${USERNAME}/O=devGroup" \
--out ${User_Openssl_File}.csr
+-out ${user_openssl_path_name}.csr
 openssl x509 -req \
 -CA /etc/kubernetes/pki/ca.crt \
 -CAkey /etc/kubernetes/pki/ca.key \
--CAcreateserial -in ${User_Openssl_File}.csr -out ${User_Openssl_File}.crt -days 3650
+-CAcreateserial -in ${user_openssl_path_name}.csr -out ${user_openssl_path_name}.crt -days 3650
 
 if [ $? -ne 0 ]; then
     echo "Error: openssl create failed"
@@ -90,11 +90,11 @@ echo ">>>>> openssl create success"
 # apiserver 通过 kubectl cluster-info 获取
 
 # 设置集群参数
-kubectl config set-cluster ${Cluster_Name} \
+kubectl config set-cluster ${cluster_name} \
 --embed-certs=true \
 --certificate-authority=/etc/kubernetes/pki/ca.crt \
---server=${Api_Server} \
---kubeconfig=${User_Openssl_File}.kubeconfig
+--server=${api_server} \
+--kubeconfig=${user_openssl_path_name}.kubeconfig
 
 if [ $? -ne 0 ]; then
     echo "Error: set-cluster create failed"
@@ -105,9 +105,9 @@ echo ">>>>> set-cluster create success"
 # 设置客户端认证参数
 kubectl config set-credentials ${USERNAME} \
 --embed-certs=true \
---client-certificate=${User_Openssl_File}.crt \
---client-key=${User_Openssl_File}.key \
---kubeconfig=${User_Openssl_File}.kubeconfig
+--client-certificate=${user_openssl_path_name}.crt \
+--client-key=${user_openssl_path_name}.key \
+--kubeconfig=${user_openssl_path_name}.kubeconfig
 
 if [ $? -ne 0 ]; then
     echo "Error: set-credentials create failed"
@@ -116,12 +116,12 @@ fi
 echo ">>>>> set-credentials create success"
 
 # 设置上下文参数
-Set_Context_Name=${USERNAME}@${Cluster_Name}
-kubectl config set-context ${Set_Context_Name} \
---cluster=${Cluster_Name} \
+set_context_name=${USERNAME}@${cluster_name}
+kubectl config set-context ${set_context_name} \
+--cluster=${cluster_name} \
 --user=${USERNAME} \
 --namespace=${NAMESPACE} \
---kubeconfig=${User_Openssl_File}.kubeconfig
+--kubeconfig=${user_openssl_path_name}.kubeconfig
 
 if [ $? -ne 0 ]; then
     echo "Error: set-context create failed"
@@ -133,11 +133,11 @@ echo ">>>>> set-context create success"
 # 角色命名与角色绑定器命名说明：
 # 如果 user=devuser
 # 则 role=role-devuser、 rolebinding=rb-role-devuser
-Role_Name=role-${USERNAME}
-Role_Binding_Name=rb-${Role_Name}
+role_name=role-${USERNAME}
+rolebinding_name=rb-${role_name}
 
 # 创建角色
-kubectl create role ${Role_Name} \
+kubectl create role ${role_name} \
 --namespace=${NAMESPACE} \
 --verb=get,list,watch,exec \
 --resource=pod
@@ -149,9 +149,9 @@ fi
 echo ">>>>> set role create success"
 
 # 角色绑定
-kubectl create rolebinding ${Role_Binding_Name} \
+kubectl create rolebinding ${rolebinding_name} \
 --namespace=${NAMESPACE} \
---role=${Role_Name} \
+--role=${role_name} \
 --user=${USERNAME}
 
 if [ $? -ne 0 ]; then
@@ -163,7 +163,7 @@ echo ">>>>> rolebinding create success"
 
 # 授权文件赋值
 mkdir /home/${USERNAME}/.kube
-cat ${User_Openssl_File}.kubeconfig > /home/${USERNAME}/.kube/config
+cat ${user_openssl_path_name}.kubeconfig > /home/${USERNAME}/.kube/config
 chown ${USERNAME}:${USERNAME} /home/${USERNAME}/.kube -R
 
 if [ $? -ne 0 ]; then
@@ -184,24 +184,24 @@ echo "username: ${USERNAME}"
 echo "namespace: ${NAMESPACE}"
 echo "---------------------------------------------------------------"
 echo "Rbac authority info"
-echo "role: ${Role_Name}"
-echo "rolebinding: ${Role_Binding_Name}"
+echo "role: ${role_name}"
+echo "rolebinding: ${rolebinding_name}"
 echo "---------------------------------------------------------------"
 echo "Kube config"
 echo ""
-echo "K8s pki path: ${User_Openssl_File}.kubeconfig"
+echo "K8s pki path: ${user_openssl_path_name}.kubeconfig"
 echo "user kube config path: /home/${USERNAME}/.kube/config"
 echo "---------------------------------------------------------------"
 echo "Kubernetes Cluster config info"
 echo ""
-echo "cluster name: ${Cluster_Name}"
-echo "apiserver: ${Api_Server}"
+echo "cluster name: ${cluster_name}"
+echo "apiserver: ${api_server}"
 echo "---------------------------------------------------------------"
 echo "Help Document"
 echo "Please execute the following command under the authorized user"
 echo ""
 echo "Switched to context:"
-echo "kubectl config use-context ${Set_Context_Name} --kubeconfig=/home/${USERNAME}/.kube/config"
+echo "kubectl config use-context ${set_context_name} --kubeconfig=/home/${USERNAME}/.kube/config"
 echo ""
 echo "Test k8s command:"
 echo "kubectl get pod -n ${NAMESPACE}"

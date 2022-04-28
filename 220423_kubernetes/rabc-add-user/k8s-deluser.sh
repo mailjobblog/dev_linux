@@ -10,13 +10,13 @@ NAMESPACE=$2
 
 # 参数定义
 # k8s用户证书文件存放地址
-User_Openssl_File=/etc/kubernetes/pki/${USERNAME}
+user_openssl_path_name=/etc/kubernetes/pki/${USERNAME}
 
-Role_Name=role-${USERNAME}
-Role_Binding_Name=rb-${Role_Name}
+role_name=role-${USERNAME}
+rolebinding_name=rb-${role_name}
 
 
-kubectl delete role ${Role_Name} -n ${NAMESPACE}
+kubectl delete role ${role_name} -n ${NAMESPACE}
 if [ $? -ne 0 ]; then
     echo "Warning: delete role failed"
 else
@@ -24,7 +24,7 @@ else
 fi
 
 
-kubectl delete rolebinding ${Role_Binding_Name} -n ${NAMESPACE}
+kubectl delete rolebinding ${rolebinding_name} -n ${NAMESPACE}
 if [ $? -ne 0 ]; then
     echo "Warning: delete rolebinding failed"
 else
@@ -33,10 +33,10 @@ fi
 
 
 # 删除用户证书文件
-if [ -f "${User_Openssl_File}.key" ];then
-  rm -f ${User_Openssl_File}.key
-  rm -f ${User_Openssl_File}.csr
-  rm -f ${User_Openssl_File}.crt
+if [ -f "${user_openssl_path_name}.key" ];then
+  rm -f ${user_openssl_path_name}.key
+  rm -f ${user_openssl_path_name}.csr
+  rm -f ${user_openssl_path_name}.crt
   echo ">>>>> delete user openssl key,csr,crt success"
 fi
 
