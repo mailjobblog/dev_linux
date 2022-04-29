@@ -17,7 +17,10 @@ NAMESPACE=$2
 
 # k8s用户证书文件存放地址
 user_openssl_path_name=/etc/kubernetes/pki/${USERNAME}
-
+# 角色名
+role_name=role-${USERNAME}
+# 角色绑定名称
+rolebinding_name=rb-${role_name}
 # Linux添加用户说明文档
 add_user_doc=https://github.com/mailjobblog/dev_linux/tree/master/220422_linux-sshkey
 
@@ -129,12 +132,8 @@ if [ $? -ne 0 ]; then
 fi
 echo ">>>>> set-context create success"
 
+
 # 创建角色并绑定用户
-# 角色命名与角色绑定器命名说明：
-# 如果 user=devuser
-# 则 role=role-devuser、 rolebinding=rb-role-devuser
-role_name=role-${USERNAME}
-rolebinding_name=rb-${role_name}
 
 # 创建角色
 kubectl create role ${role_name} \

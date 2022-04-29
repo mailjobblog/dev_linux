@@ -11,8 +11,9 @@ NAMESPACE=$2
 # 参数定义
 # k8s用户证书文件存放地址
 user_openssl_path_name=/etc/kubernetes/pki/${USERNAME}
-
+# 角色名
 role_name=role-${USERNAME}
+# 角色绑定名称
 rolebinding_name=rb-${role_name}
 
 
