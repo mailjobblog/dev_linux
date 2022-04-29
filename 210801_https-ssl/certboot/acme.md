@@ -1,4 +1,4 @@
-# Centos通过acme申请Let’s Encrypt通配符HTTPS证书-简单粗暴
+# acme申请ssl证书
 
 这个方法简单粗暴，屡试不爽，博主推荐。本博客上一篇文章的另外一个方法----[CentOS安装使用certbot申请Let’s Encrypt 通配符证书](https://blog.hlogc.com/2019/07/19/centos-apply-lets-encrypt-wild-card-ssl-via-certbot/)---有点繁琐。
 

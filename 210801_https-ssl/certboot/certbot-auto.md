@@ -1,12 +1,12 @@
-# CentOS安装使用certbot申请Let’s Encrypt 通配符证书
+# Certbot-auto生成ssl证书
 
-### 先决条件
+## 先决条件
 
 1、拥有一个域名，例如 mydomain.com
 2、在域名服务器创建一条A记录，指向云主机的公网IP地址。例如 demo.mydomain.com 指向 192.168.0.1 的IP地址
 3、要等到新创建的域名解析能在公网上被解析到
 
-### 安装 Certbot
+## 安装 Certbot
 
 前往 [Certbot 官网](https://blog.hlogc.com/wp-content/themes/begin5.2/inc/go.php?url=https://certbot.eff.org/)按照步骤安装 certbot
 
@@ -21,9 +21,9 @@ wget https://dl.eff.org/certbot-auto
 chmod a+x certbot-auto # 给脚本执行权限
 ```
 
-### Certbot 两种生成证书的方式
+## Certbot 两种生成证书的方式
 
-#### certbot 模式（推荐）
+### certbot 模式（推荐）
 
 certbot 会启动自带的 nginx（如果服务器上已经有nginx或apache运行，需要停止已有的nginx或apache，因为安装过程中可能需要用到80端口做校验）生成证书
 
@@ -45,7 +45,7 @@ rm -rf /etc/letsencrypt/live/xxx.xxx.com/
 ./certbot-auto certonly --standalone -d www.example.com
 ```
 
-#### webroot 模式
+### webroot 模式
 
 1、配置验证目录
 
@@ -87,7 +87,7 @@ certbot会生成随机文件到给定目录(nginx配置的网页目录)下的/.w
 | fullchain.pem | cert.pem+chain.pem                                  |
 | privkey.pem   | 证书的私钥                                          |
 
-#### 在 Nginx 使用证书
+### 在 Nginx 使用证书
 
 在 `sites-available/default` 中的 `server` 节点下添加：
 
