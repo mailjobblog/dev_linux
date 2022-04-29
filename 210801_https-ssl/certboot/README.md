@@ -2,13 +2,13 @@
 
 ## 方法介绍
 
+几个方法的共同点是都是基于 [certbot](https://certbot.eff.org/) 生成 SSL 证书的工具。
+
 - certbot
 - certbot-auto
 - acme
 
-**介绍**
-
-三个方法都是基于 [certbot](https://certbot.eff.org/) 生成 SSL 证书的工具，具体区别如下。
+## 区别介绍
 
 ### certbot
 
