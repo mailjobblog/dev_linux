@@ -4,7 +4,16 @@
 
 Linux下使用用户名和密码登陆服务器是不安全，所以我们需要使用密钥授权验证。
 
-## 密钥生成
+## Mac密码生产
+
+**配置账户**
+
+```bash
+git config --global user.name "your_name"
+git config --global user.email "your_eamil@163.com"
+```
+
+**密钥生成**
 
 ```bash
 ssh-keygen -t rsa -C "your_eamil@163.com"
