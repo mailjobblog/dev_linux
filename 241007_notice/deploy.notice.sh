@@ -93,16 +93,14 @@ check_param() {
 # 环境变量参数验证
 check_param "STATUS" "$STATUS"
 check_param "WEBHOOK_URL" "$WEBHOOK_URL"
+check_param "REPO" "$REPO"
 check_param "REPO_URL" "$REPO_URL"
 check_param "WORKFLOW_URL" "$WORKFLOW_URL"
-
 
 if [[ "$STATUS" != "1" && "$STATUS" != "0" ]]; then
   echo "Error: 参数 STATUS 必须是 0 或者 1"
   exit 1
 fi
-
-TRIGGER_TIME="$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S")"
 
 if [[ "$STATUS" == "1" ]]; then
   STATUS_MSG="成功"
@@ -118,6 +116,7 @@ fi
 ######################################################################
 # 文本通知
 ######################################################################
+TRIGGER_TIME="$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S")"
 CONTENT="$CONTENT_TITLE \n\n仓库: $REPO \n分支: $BRANCH \n作者: $COMMIT_USER \n状态: $STATUS_MSG \n信息: $COMMIT_MESSAGE \n时间: $TRIGGER_TIME \n详情: $WORKFLOW_URL "
 # 飞书文本通知
 notice_feishu_text() {
@@ -165,6 +164,112 @@ notice_showdoc_text() {
 ######################################################################
 # Markdown通知
 ######################################################################
+# 使用飞书的富文本代替Markdown
+notice_feishu_markdown() {
+  curl -X POST "$WEBHOOK_URL"  \
+     -H 'Content-Type: application/json' \
+     -d '{
+       "msg_type": "post",
+       "content": {
+         "post": {
+           "zh_cn": {
+             "title": "'"$CONTENT_TITLE"'",
+             "content": [
+               [
+                 {
+                   "tag": "text",
+                   "text": ""
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "仓库："
+                 },
+                 {
+                   "tag": "a",
+                   "text": "'"$REPO"'",
+                   "href": "'"$REPO_URL"'"
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "分支："
+                 },
+                 {
+                   "tag": "text",
+                   "text": "'"$BRANCH"'"
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "哈希："
+                 },
+                 {
+                   "tag": "text",
+                   "text": "'"$COMMIT_SHA"'"
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "信息："
+                 },
+                 {
+                   "tag": "text",
+                   "text": "'"$COMMIT_MESSAGE"'"
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "作者："
+                 },
+                 {
+                   "tag": "text",
+                   "text": "'"$COMMIT_USER"'"
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "时间："
+                 },
+                 {
+                   "tag": "text",
+                   "text": "'"$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S")"'"
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "状态："
+                 },
+                 {
+                   "tag": "text",
+                   "text": "'"$STATUS_MSG"'"
+                 }
+               ],
+               [
+                 {
+                   "tag": "text",
+                   "text": "详情："
+                 },
+                 {
+                   "tag": "a",
+                   "text": "查看流水线",
+                   "href": "'"$WORKFLOW_URL"'"
+                 }
+               ]
+             ]
+           }
+         }
+       }
+     }'
+}
+
 notice_workWechat_markdown() {
   CONTENT="<font color='$COLOR'>**$CONTENT_TITLE**</font>
 \n
@@ -338,32 +443,49 @@ case $NOTICE_TYPE in
   feishu) # 飞书
     if [[ "$MSG_TYPE" == "text" ]]; then
       notice_feishu_text
-    else
+    elif [[ "$MSG_TYPE" == "markdown" ]]; then
+      notice_feishu_markdown
+    elif [[ "$MSG_TYPE" == "card" ]]; then
       notice_feishu_card
+    else
+      echo "Error: Invalid MSG_TYPE provided."
+      exit 1
     fi
     ;;
   dingtalk) # 钉钉
     if [[ "$MSG_TYPE" == "text" ]]; then
       notice_dingtalk_text
-    else
+    elif [[ "$MSG_TYPE" == "markdown" ]]; then
       notice_dingtalk_markdown
+    else
+      echo "Error: Invalid MSG_TYPE provided."
+      exit 1
     fi
     ;;
   workWechat) # 企业微信
     if [[ "$MSG_TYPE" == "text" ]]; then
       notice_workWechat_text
-    else
+    elif [[ "$MSG_TYPE" == "markdown" ]]; then
       notice_workWechat_markdown
+    else
+      echo "Error: Invalid MSG_TYPE provided."
+      exit 1
     fi
     ;;
   showDoc) # showDoc
-    notice_showdoc_text
+    if [[ "$MSG_TYPE" == "text" ]]; then
+      notice_showdoc_text
+    else
+      echo "Error: Invalid MSG_TYPE provided."
+      exit 1
+    fi
     ;;
   *)
     echo "Error: Invalid NOTICE_TYPE provided."
     exit 1
     ;;
 esac
+
 
 
 ######################################################################
