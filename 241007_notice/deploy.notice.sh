@@ -3,25 +3,6 @@ set -e
 NOTICE_TYPE="$1"
 MSG_TYPE="$2"
 
-print_env() {
-  echo "--------------------------------------------------------------------------"
-  echo "  Shell Notification < Initialization Parameters >"
-  echo "--------------------------------------------------------------------------"
-  echo "  STATUS: $STATUS"
-  echo "  REPO: $REPO"
-  echo "  REPO_URL: $REPO_URL"
-  echo "  BRANCH: $BRANCH"
-  echo "  COMMIT_USER: $COMMIT_USER"
-  echo "  COMMIT_MESSAGE: $COMMIT_MESSAGE"
-  echo "  WORKFLOW_URL: $WORKFLOW_URL"
-  echo "  TRIGGER_TIME: $TRIGGER_TIME"
-  echo "--------------------------------------------------------------------------"
-  echo "  NOTICE_TYPE: $NOTICE_TYPE"
-  echo "  MSG_TYPE: $MSG_TYPE"
-  echo "--------------------------------------------------------------------------"
-}
-print_env
-
 print_usage() {
   echo "Usage: $0 <NOTICE_TYPE> <MSG_TYPE>"
   echo ""
@@ -43,12 +24,35 @@ print_usage() {
   exit 1
 }
 
-
 if [[ "$ACTION" == "--help" ]]; then
   print_usage
   exit 0
 fi
 
+print_env() {
+  echo "--------------------------------------------------------------------------"
+  echo "  Shell Notification < Initialization Parameters >"
+  echo "--------------------------------------------------------------------------"
+  echo "  STATUS: $STATUS"
+  echo "  REPO: $REPO"
+  echo "  REPO_URL: $REPO_URL"
+  echo "  BRANCH: $BRANCH"
+  echo "  COMMIT_USER: $COMMIT_USER"
+  echo "  COMMIT_MESSAGE: $COMMIT_MESSAGE"
+  echo "  WORKFLOW_URL: $WORKFLOW_URL"
+  echo "  TRIGGER_TIME: $TRIGGER_TIME"
+  echo "--------------------------------------------------------------------------"
+  echo "  NOTICE_TYPE: $NOTICE_TYPE"
+  echo "  MSG_TYPE: $MSG_TYPE"
+  echo "--------------------------------------------------------------------------"
+}
+
+print_env
+
+
+######################################################################
+# Shell 脚本运行参数验证
+######################################################################
 # 检查是否提供了足够的参数
 if [ "$#" -lt 2 ]; then
   print_usage
