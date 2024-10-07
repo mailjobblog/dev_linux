@@ -25,7 +25,7 @@ fi
 # git 命令执行
 #
 #==============================================
-git pull origin master && \
+git pull origin main && \
 git add . && \
 git commit -m "${commit}" && \
-git push origin master
+git push origin main
