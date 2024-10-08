@@ -72,14 +72,7 @@ if [[ "$MSG_TYPE" != "text" && "$MSG_TYPE" != "markdown" && "$MSG_TYPE" != "card
 fi
 
 # 环境变量
-WEBHOOK_URL="$WEBHOOK_URL"
-STATUS="$STATUS"
-REPO="$REPO"
-REPO_URL="$REPO_URL"
-BRANCH="$BRANCH"
-COMMIT_USER="$COMMIT_USER"
 COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | tr -d '\n')
-WORKFLOW_URL="$WORKFLOW_URL"
 
 check_param() {
   local param_name="$1"
@@ -118,7 +111,7 @@ fi
 ######################################################################
 TRIGGER_TIME="$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S")"
 CONTENT="$CONTENT_TITLE \n\n仓库: $REPO \n分支: $BRANCH \n作者: $COMMIT_USER \n状态: $STATUS_MSG \n信息: $COMMIT_MESSAGE \n时间: $TRIGGER_TIME \n详情: $WORKFLOW_URL "
-# 飞书文本通知
+
 notice_feishu_text() {
   curl -X POST "$WEBHOOK_URL" \
     -H 'Content-Type: application/json' \
@@ -130,7 +123,6 @@ notice_feishu_text() {
     }'
 }
 
-# 企微文本通知
 notice_workWechat_text() {
   curl -X POST "$WEBHOOK_URL" \
     -H 'Content-Type: application/json' \
@@ -142,7 +134,6 @@ notice_workWechat_text() {
     }'
 }
 
-# 钉钉文本通知
 notice_dingtalk_text() {
   curl -X POST "$WEBHOOK_URL" \
     -H 'Content-Type: application/json' \
@@ -154,10 +145,11 @@ notice_dingtalk_text() {
     }'
 }
 
-# ShowDoc文本通知
 notice_showdoc_text() {
-  CONTENT=$(echo "$CONTENT" | sed ':a;N;$!ba;s/\\n/<br>/g')
-  curl -X POST "$SHOWDOC_WEBHOOK_URL" \
+#  CONTENT=$(echo "$CONTENT" | sed ':a;N;$!ba;s/\\n/<br>/g')
+#  CONTENT=$(echo "$CONTENT" | sed 's/\\n/<br>/g')
+  CONTENT=${CONTENT//\\n/<br>}
+  curl -X POST "$WEBHOOK_URL" \
     -d "title=$CONTENT_TITLE&content=$CONTENT"
 }
 
@@ -271,7 +263,7 @@ notice_feishu_markdown() {
 }
 
 notice_workWechat_markdown() {
-  CONTENT="<font color='$COLOR'>**$CONTENT_TITLE**</font>
+  CONTENT="## <font color='$COLOR'>$CONTENT_TITLE</font>
 \n
 仓库：[$REPO]($REPO_URL)
 分支：$BRANCH
@@ -293,7 +285,8 @@ notice_workWechat_markdown() {
 }
 
 notice_dingtalk_markdown() {
-  CONTENT="<font color='$COLOR'>**$CONTENT_TITLE**</font> <br><br>仓库：[$REPO]($REPO_URL) <br>分支：$BRANCH <br>信息：$COMMIT_MESSAGE <br>哈希：$COMMIT_SHA <br>作者：$COMMIT_USER <br>时间：$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S") <br>状态：$STATUS_MSG <br>详情：[查看流水线]($WORKFLOW_URL)"
+  CONTENT="### <font color='$COLOR'>$CONTENT_TITLE</font>
+<br>仓库：[$REPO]($REPO_URL)<br>分支：$BRANCH <br>信息：$COMMIT_MESSAGE <br>哈希：$COMMIT_SHA <br>作者：$COMMIT_USER <br>时间：$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S") <br>状态：$STATUS_MSG <br>详情：[查看流水线]($WORKFLOW_URL)"
 
   curl -X POST "$WEBHOOK_URL" \
     -H 'Content-Type: application/json' \
@@ -305,6 +298,23 @@ notice_dingtalk_markdown() {
         }
     }'
 }
+
+notice_showdoc_markdown() {
+    CONTENT="### <font color='$COLOR'>$CONTENT_TITLE</font>
+
+仓库：[$REPO]($REPO_URL)
+分支：$BRANCH
+信息：$COMMIT_MESSAGE
+哈希：$COMMIT_SHA
+作者：$COMMIT_USER
+时间：$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S")
+状态：$STATUS_MSG
+详情：[查看流水线]($WORKFLOW_URL)"
+
+  curl -X POST "$WEBHOOK_URL" \
+    -d "title=$CONTENT_TITLE&content=$CONTENT"
+}
+
 
 ######################################################################
 # 卡片通知
@@ -390,52 +400,6 @@ notice_feishu_card() {
 }
 
 
-notice_workWechat_card() {
-  curl -X POST "$WEBHOOK_URL" \
-    -H "Content-Type: application/json" \
-    -d '{
-          "msgtype":"template_card",
-          "template_card":{
-              "card_type":"news_notice",
-              "source":{
-                  "desc":"企业微信",
-                  "desc_color":0
-              },
-              "main_title":{
-                  "title":"欢迎使用企业微信 666",
-                  "desc":"您的好友正在邀请您加入企业微信"
-              },
-              "image_text_area":{
-                  "type":1,
-                  "url":"https://work.weixin.qq.com",
-                  "title":"欢迎使用企业微信",
-                  "desc":"您的好友正在邀请您加入企业微信",
-                  "image_url":"https://wework.qpic.cn/wwpic/354393_4zpkKXd7SrGMvfg_1629280616/0"
-              },
-              "vertical_content_list":[
-                  {
-                      "title":"惊喜红包等你来拿",
-                      "desc":"下载企业微信还能抢红包！"
-                  }
-              ],
-              "jump_list":[
-                  {
-                      "type":1,
-                      "url":"'"$WORKFLOW_URL"'",
-                      "title":"流水线查看"
-                  }
-              ],
-              "card_action":{
-                  "type":1,
-                  "url":"'"$REPO_URL"'",
-                  "appid":"APPID",
-                  "pagepath":"PAGEPATH"
-              }
-          }
-      }'
-}
-
-
 ######################################################################
 # 程序调用执行
 ######################################################################
@@ -475,6 +439,8 @@ case $NOTICE_TYPE in
   showDoc) # showDoc
     if [[ "$MSG_TYPE" == "text" ]]; then
       notice_showdoc_text
+    elif [[ "$MSG_TYPE" == "markdown" ]]; then
+      notice_showdoc_markdown
     else
       echo "Error: Invalid MSG_TYPE provided."
       exit 1
