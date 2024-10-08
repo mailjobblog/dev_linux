@@ -46,6 +46,9 @@ curl -fsSL https://raw.githubusercontent.com/mailjobblog/dev_linux/refs/heads/ma
 STATUS=1 WEBHOOK_URL=https://open.feishu.cn/webhook/xxxx REPO=example/repo ./deploy.notice.sh feishu markdown
 ```
 
+**Tips**
+- 如果您在国内服务器运行，推荐使用 [国内镜像](https://gitee.com/mailjobblog/dev_linux/tree/main/241007_notice) 以提高下载速度。
+
 #### 参数
 NOTICE_TYPE：通知发送的平台，支持以下选项
 - feishu: 使用飞书发送通知
