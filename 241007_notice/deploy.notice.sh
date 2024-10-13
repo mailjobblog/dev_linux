@@ -72,7 +72,8 @@ if [[ "$MSG_TYPE" != "text" && "$MSG_TYPE" != "markdown" && "$MSG_TYPE" != "card
 fi
 
 # 环境变量
-COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | tr -d '\n')
+#COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | tr -d '\n')
+COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | head -n 1 | tr -d '\n')
 
 check_param() {
   local param_name="$1"

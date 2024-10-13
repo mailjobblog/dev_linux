@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export STATUS="0"
+export STATUS="1"
 export REPO="gitee/example"
 export REPO_URL="https://gitee.com"
 export WORKFLOW_URL="https://gitee.com/jefferywork/example-deploy-gitee-php/gitee_go/pipelines"
@@ -8,7 +8,32 @@ export WORKFLOW_URL="https://gitee.com/jefferywork/example-deploy-gitee-php/gite
 export BRANCH="main"
 export COMMIT_USER="jefferyjob"
 export COMMIT_SHA="a1b2c3d"
-export COMMIT_MESSAGE="feat:用户信息更新"
+export COMMIT_MESSAGE="  Test：测试乱格式提示影响jefferyjob/notify-actions (#15)* 测试乱格式提示影响jefferyjob/notify-actions
+
+🤔️
+
+哈哈  李
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+* test 1
+
+
+fdsafds 444 hah
+
+* test 2
+
+fdsafds 444 hah
+
+* test 3333
+
+    fdsafds 444 hah
+
+* test 4
+
+fdsafds 444 hah
+
+
+    "
 
 
 # 企业微信
@@ -21,7 +46,7 @@ export WEBHOOK_URL="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=7fd4ebf
 export WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/eb6bfd1c-a280-47ea-af3e-d372cad188d7"
 #sh deploy.notice.sh feishu text
 #sh deploy.notice.sh feishu markdown
-#sh deploy.notice.sh feishu card
+sh deploy.notice.sh feishu card
 
 # 钉钉
 export WEBHOOK_URL="https://oapi.dingtalk.com/robot/send?access_token=b1b6024c02ff4b65235a90af7f713338cb3a2ac4df04e588ff5a701c1c014c35"
