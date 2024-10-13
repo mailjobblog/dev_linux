@@ -8,7 +8,7 @@ export WORKFLOW_URL="https://gitee.com/jefferywork/example-deploy-gitee-php/gite
 export BRANCH="main"
 export COMMIT_USER="jefferyjob"
 export COMMIT_SHA="a1b2c3d"
-export COMMIT_MESSAGE="  Test：测试乱格式提示影响jefferyjob/notify-actions (#15)* 测试乱格式提示影响jefferyjob/notify-actions
+export COMMIT_MESSAGE="  Test：\"测试\"乱格式提示影响jefferyjob/notify-actions (#15)* 测试乱格式提示影响jefferyjob/notify-actions
 
 🤔️
 

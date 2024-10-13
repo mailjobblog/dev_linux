@@ -72,8 +72,16 @@ if [[ "$MSG_TYPE" != "text" && "$MSG_TYPE" != "markdown" && "$MSG_TYPE" != "card
 fi
 
 # 环境变量
-#COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | tr -d '\n')
-COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | head -n 1 | tr -d '\n')
+#COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | tr -d '\n') # 去除换行
+#COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | head -n 1 | tr -d '\n') # 去除换行且保留第一行
+COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | head -n 1 | tr -d '\n' | sed -e 's/[[:punct:]]//g')
+
+#如果需要保留部分特殊字符：
+#可以根据需要精细化过滤规则，移除或转义特定的符号。例如，只移除部分符号，而保留常见的内容符号（如 #）：
+# COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | head -n 1 | tr -d '\n' | sed -e 's/[()\\*]//g' | sed 's/[#]/\\#/g')
+
+#echo $COMMIT_MESSAGE
+#exit 1
 
 check_param() {
   local param_name="$1"
